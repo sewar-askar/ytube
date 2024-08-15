@@ -71,7 +71,7 @@ const fetchDislikesForBatch = async (batch) => {
         );
         return {
           ...video,
-          dislikes: 0,
+          dislikes: -1,
           likeDislikeRatio: video.likeDislikeRatio,
         };
       }
@@ -199,7 +199,7 @@ const processVideoIds = async (videoIds) => {
       const views = parseInt(stats.viewCount) || 0;
       const likes = parseInt(stats.likeCount) || 0;
 
-      let dislikes = 0;
+      let dislikes = -1;
       try {
         const dislikesResponse = await getDislikesApi(item.id);
         dislikes = dislikesResponse.data.dislikes;

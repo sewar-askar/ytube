@@ -15,7 +15,7 @@ const VideoItem = ({ video }) => {
         Likes: {(video.likes || 0).toLocaleString()}
       </p>
       <p className="text-sm text-gray-600">
-        Dislikes: {(video.dislikes || 0).toLocaleString()}
+        Dislikes: {(video.dislikes || -1).toLocaleString()}
       </p>
       <p className="text-sm text-gray-600">
         Like/Dislike Ratio: {video.likeDislikeRatio}%
