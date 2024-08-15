@@ -1,19 +1,19 @@
 import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import VideoList from "./components/VideoList";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
-const queryClient = new QueryClient();
+import { VideoAnalyticsProvider } from "./context/VideoAnalyticsContext";
+import HomePage from "./pages/HomePage";
+import AnalyticsPage from "./pages/AnalyticsPage";
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <VideoAnalyticsProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<VideoList />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
         </Routes>
       </Router>
-    </QueryClientProvider>
+    </VideoAnalyticsProvider>
   );
 }
 
