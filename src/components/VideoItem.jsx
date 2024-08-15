@@ -1,34 +1,44 @@
 import React from "react";
+import { Eye, ThumbsUp, ThumbsDown, BarChart, Link2 } from "lucide-react";
 
 const VideoItem = ({ video }) => {
   return (
-    <div key={video.id} className="border p-4 rounded shadow">
-      <img src={video.thumbnail} alt={video.title} className="w-full" />
-      <h2 className="font-bold mt-2">{video.title}</h2>
-      <p className="text-sm text-gray-600">
-        Published: {new Date(video.publishedAt).toLocaleDateString()}
-      </p>
-      <p className="text-sm text-gray-600">
-        Views: {(video.views || 0).toLocaleString()}
-      </p>
-      <p className="text-sm text-gray-600">
-        Likes: {(video.likes || 0).toLocaleString()}
-      </p>
-      <p className="text-sm text-gray-600">
-        Dislikes: {(video.dislikes || 0).toLocaleString()}
-      </p>
-      <p className="text-sm text-gray-600">
-        Like/Dislike Ratio: {video.likeDislikeRatio}%
-      </p>
-      <p className="text-sm text-gray-600">
-        Like/Views Ratio: {video.likeViewRatio}%
-      </p>
+    <div className="transition duration-300 transform hover:-translate-y-1 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-xl p-4">
+      <img
+        src={video.thumbnail}
+        alt={video.title}
+        className="w-full h-48 object-cover rounded-md"
+      />
+      <h2 className="mt-4 text-xl font-bold text-gray-900">{video.title}</h2>
+      <div className="mt-2 space-y-2">
+        <p className="flex items-center text-gray-600">
+          <Eye className="w-5 h-5 mr-2" />
+          {video.views.toLocaleString()} Views
+        </p>
+        <p className="flex items-center text-gray-600">
+          <ThumbsUp className="w-5 h-5 mr-2" />
+          {video.likes.toLocaleString()} Likes
+        </p>
+        <p className="flex items-center text-gray-600">
+          <ThumbsDown className="w-5 h-5 mr-2" />
+          {video.dislikes.toLocaleString()} Dislikes
+        </p>
+        <p className="flex items-center text-gray-600">
+          <BarChart className="w-5 h-5 mr-2" />
+          Like/Dislike Ratio: {video.likeDislikeRatio}%
+        </p>
+        <p className="flex items-center text-gray-600">
+          <BarChart className="w-5 h-5 mr-2" />
+          Like/Views Ratio: {video.likeViewRatio}%
+        </p>
+      </div>
       <a
         href={`https://www.youtube.com/watch?v=${video.id}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-blue-500 hover:underline"
+        className="block mt-4 text-gray-700 hover:underline hover:text-gray-900 transition-colors duration-300"
       >
+        <Link2 className="inline-block w-5 h-5 mr-1" />
         Watch Video
       </a>
     </div>
