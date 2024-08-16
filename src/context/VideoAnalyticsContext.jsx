@@ -4,7 +4,7 @@ export const VideoAnalyticsContext = createContext();
 
 export const VideoAnalyticsProvider = ({ children }) => {
   const [videos, setVideos] = useState([]);
-  const [sortBy, setSortBy] = useState("publishedAt");
+  const [sortBy, setSortBy] = useState("Date (newest first)");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
