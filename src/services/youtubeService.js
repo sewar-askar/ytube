@@ -51,7 +51,10 @@ const fetchDislikesWithRetry = async (
       const dislikesResponse = await getDislikesApi(videoId);
       return dislikesResponse.data.dislikes;
     } catch (error) {
-      if (i === maxRetries - 1) throw error;
+      if (i === maxRetries - 1) {
+        console.error(`Max retries reached for video ID: ${videoId}`);
+        return null; // Return null to indicate failure
+      }
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
@@ -72,7 +75,12 @@ const processVideoData = async (videoData) => {
     const { id, retries, maxRetries, video } = queue.shift();
 
     try {
-      const dislikes = await fetchDislikesWithRetry(id);
+      const dislikes = await fetchDislikesWithRetry(id, maxRetries);
+      if (dislikes === null) {
+        failedVideos.push(id); // Track the failed video and skip further processing
+        continue;
+      }
+
       const likes = video.likes || 0;
       const views = video.views || 0;
 
@@ -93,7 +101,6 @@ const processVideoData = async (videoData) => {
       }
     }
 
-    // delay
     await new Promise((resolve) => setTimeout(resolve, 10));
   }
 
@@ -126,12 +133,28 @@ const processVideoIds = async (videoIds) => {
   return processVideoData(videoData);
 };
 
-const processAndSetVideos = async (videoIds, setVideos) => {
-  const processedVideos = await processVideoIds(videoIds);
-  setVideos(processedVideos); // Ensures the UI is updated after processing is complete
+const processAndSetVideos = async (videoIds, onVideoFetched) => {
+  const uniqueVideoIds = [...new Set(videoIds)];
+  const processedVideos = [];
+  const totalVideos = uniqueVideoIds.length;
+
+  console.log(`Processing ${totalVideos} videos...`);
+
+  for (let i = 0; i < totalVideos; i++) {
+    const videoId = uniqueVideoIds[i];
+    try {
+      const videoData = await processVideoIds(videoId);
+      processedVideos.push(...videoData);
+      const progress = ((i + 1) / totalVideos) * 100;
+      console.log(`Progress after fetching video ${i + 1}: ${progress}%`);
+      onVideoFetched([...processedVideos], progress);
+    } catch (error) {
+      console.error(`Error processing video ${videoId}:`, error);
+    }
+  }
 };
 
-export const getVideos = async (input, type, setVideos) => {
+export const getVideos = async (input, type, onVideoFetched) => {
   let videoIds;
 
   switch (type) {
@@ -154,7 +177,10 @@ export const getVideos = async (input, type, setVideos) => {
       throw new Error("Invalid type");
   }
 
-  await processAndSetVideos(videoIds, setVideos);
+  const videoIdsArray = videoIds.split(",");
+  await processAndSetVideos(videoIdsArray, onVideoFetched);
+  console.log(`Total unique video IDs fetched: ${videoIdsArray.length}`);
+  return videoIdsArray.length;
 };
 
 // Implement these helper functions to get video IDs for each type

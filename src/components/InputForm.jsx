@@ -1,6 +1,4 @@
-import React, { useState, useContext } from "react";
-import { VideoAnalyticsContext } from "../context/VideoAnalyticsContext";
-import { getVideos } from "../services/youtubeService";
+import React, { useState } from "react";
 import {
   UploadCloud,
   Search,
@@ -9,18 +7,21 @@ import {
   Film,
   BarChart3,
 } from "lucide-react";
+import { getVideos } from "../services/youtubeService";
 
-const InputForm = ({ type }) => {
+const InputForm = ({
+  type,
+  setLoadingProgress,
+  setIsLoading,
+  clearVideos,
+  setVideos,
+}) => {
   const [input, setInput] = useState("");
   const [file, setFile] = useState(null);
-  const { setVideos, setIsLoading, setError, clearVideos } = useContext(
-    VideoAnalyticsContext
-  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
     clearVideos();
 
     try {
@@ -31,15 +32,25 @@ const InputForm = ({ type }) => {
         const reader = new FileReader();
         reader.onload = async (e) => {
           const json = JSON.parse(e.target.result);
-          await getVideos(json, type, setVideos);
+          await getVideos(json, type, (videos, progress) => {
+            setVideos(videos);
+            setLoadingProgress(progress);
+          });
+          setLoadingProgress(100);
+          setIsLoading(false);
         };
         reader.readAsText(file);
       } else {
-        await getVideos(input, type, setVideos);
+        await getVideos(input, type, (videos, progress) => {
+          setVideos(videos);
+          setLoadingProgress(progress);
+        });
+        setLoadingProgress(100);
+        setIsLoading(false);
       }
     } catch (error) {
-      setError(error.message);
-    } finally {
+      console.error("Error fetching videos:", error);
+      setLoadingProgress(null);
       setIsLoading(false);
     }
   };
