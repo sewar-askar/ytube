@@ -40,12 +40,12 @@ export const getChannelDetailsApi = async (channelId) => {
     id: channelId,
   });
 };
-export const searchVideosApi = async (query) => {
+export const searchVideosApi = async (query, maxResults = 50) => {
   return fetchFromApi("search", {
     part: "snippet",
     q: query,
     type: "video",
-    maxResults: 50,
+    maxResults: maxResults,
   });
 };
 

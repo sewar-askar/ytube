@@ -159,12 +159,12 @@ const processAndSetVideos = async (videoIds, onVideoFetched) => {
   }
 };
 
-export const getVideos = async (input, type, onVideoFetched) => {
+export const getVideos = async (input, type, onVideoFetched, videoLimit = 50) => {
   let videoIds;
 
   switch (type) {
     case "search":
-      videoIds = await getSearchVideoIds(input);
+      videoIds = await getSearchVideoIds(input, videoLimit);
       break;
     case "channel":
       videoIds = await getChannelVideoIds(input);
@@ -192,8 +192,8 @@ export const getVideos = async (input, type, onVideoFetched) => {
 };
 
 // Implement these helper functions to get video IDs for each type
-const getSearchVideoIds = async (query) => {
-  const searchResponse = await searchVideosApi(query);
+const getSearchVideoIds = async (query, videoLimit) => {
+  const searchResponse = await searchVideosApi(query, videoLimit);
   return searchResponse.data.items.map((item) => item.id.videoId).join(",");
 };
 
