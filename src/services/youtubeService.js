@@ -6,12 +6,15 @@ import {
   getChannelDetailsApi,
   searchVideosApi,
   getVideoDetailsApi,
+  getVideoCommentsApi,
 } from "../api/youtubeApi";
 import {
   extractUsernameFromUrl,
   extractVideoId,
   extractPlaylistId,
 } from "../utils/extractors";
+import { calculateRating } from "../utils/ratingCalculator";
+
 
 export const getChannelId = async (channelUrl) => {
   if (channelUrl.includes("youtube.com/channel/")) {
@@ -217,6 +220,7 @@ const getVideoIdsFromCsv = (csvData) => {
   return csvData.map((url) => extractVideoId(url)).join(",");
 };
 
+
 export const getVideoDetails = async (videoId) => {
   const [statsResponse, detailsResponse, dislikesResponse] = await Promise.all([
     getVideoStatsApi(videoId),
@@ -232,7 +236,7 @@ export const getVideoDetails = async (videoId) => {
   const views = parseInt(stats.viewCount) || 0;
   const comments = parseInt(stats.commentCount) || 0;
 
-  return {
+  const videoData = {
     id: videoId,
     title: details.title,
     description: details.description,
@@ -245,4 +249,20 @@ export const getVideoDetails = async (videoId) => {
     likeDislikeRatio: likes + dislikes > 0 ? ((likes / (likes + dislikes)) * 100).toFixed(2) : "0",
     likeViewRatio: views > 0 ? ((likes / views) * 100).toFixed(2) : "0",
   };
+
+  videoData.rating = calculateRating(videoData);
+
+  return videoData;
+};
+export const getVideoComments = async (videoId) => {
+  try {
+    const response = await getVideoCommentsApi(videoId);
+    return response.data.items.map(item => ({
+      id: item.id,
+      text: item.snippet.topLevelComment.snippet.textDisplay
+    }));
+  } catch (error) {
+    console.error('Error fetching video comments:', error);
+    throw error;
+  }
 };

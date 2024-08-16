@@ -55,3 +55,11 @@ export const getVideoDetailsApi = async (videoIds) => {
     id: videoIds,
   });
 };
+export const getVideoCommentsApi = async (videoId) => {
+  return fetchFromApi("commentThreads", {
+    part: "snippet",
+    videoId: videoId,
+    maxResults: 20,
+    order: "relevance",
+  });
+};
