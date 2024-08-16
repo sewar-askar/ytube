@@ -1,8 +1,10 @@
 import React from "react";
 import { Eye, ThumbsUp, ThumbsDown, BarChart, Link2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const VideoItem = ({ video }) => {
   return (
+    <Link to={`/video/${video.id}`} className="block">
     <div className="transition duration-300 transform hover:-translate-y-1 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-xl">
       <img
         src={video.thumbnail}
@@ -44,6 +46,7 @@ const VideoItem = ({ video }) => {
         </a>
       </div>
     </div>
+    </Link>
   );
 };
 

@@ -207,3 +207,30 @@ const getPlaylistVideoIds = async (playlistUrl) => {
 const getVideoIdsFromJson = (jsonData) => {
   return jsonData.map((item) => extractVideoId(item.url)).join(",");
 };
+export const getVideoDetails = async (videoId) => {
+  const [statsResponse, detailsResponse, dislikesResponse] = await Promise.all([
+    getVideoStatsApi(videoId),
+    getVideoDetailsApi(videoId),
+    getDislikesApi(videoId),
+  ]);
+
+  const stats = statsResponse.data.items[0].statistics;
+  const details = detailsResponse.data.items[0].snippet;
+  const dislikes = dislikesResponse.data.dislikes;
+
+  const likes = parseInt(stats.likeCount) || 0;
+  const views = parseInt(stats.viewCount) || 0;
+
+  return {
+    id: videoId,
+    title: details.title,
+    description: details.description,
+    publishedAt: details.publishedAt,
+    thumbnail: details.thumbnails.high.url,
+    views,
+    likes,
+    dislikes,
+    likeDislikeRatio: likes + dislikes > 0 ? ((likes / (likes + dislikes)) * 100).toFixed(2) : "0",
+    likeViewRatio: views > 0 ? ((likes / views) * 100).toFixed(2) : "0",
+  };
+};
