@@ -175,6 +175,9 @@ export const getVideos = async (input, type, onVideoFetched) => {
     case "json":
       videoIds = getVideoIdsFromJson(input);
       break;
+    case "csv":
+      videoIds = getVideoIdsFromCsv(input);
+      break;
     default:
       throw new Error("Invalid type");
   }
@@ -209,6 +212,11 @@ const getPlaylistVideoIds = async (playlistUrl) => {
 const getVideoIdsFromJson = (jsonData) => {
   return jsonData.map((item) => extractVideoId(item.url)).join(",");
 };
+
+const getVideoIdsFromCsv = (csvData) => {
+  return csvData.map((url) => extractVideoId(url)).join(",");
+};
+
 export const getVideoDetails = async (videoId) => {
   const [statsResponse, detailsResponse, dislikesResponse] = await Promise.all([
     getVideoStatsApi(videoId),

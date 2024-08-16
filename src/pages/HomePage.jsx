@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { VideoAnalyticsContext } from "../context/VideoAnalyticsContext";
-import { Search, Youtube, PlaySquare, Film, FileJson } from "lucide-react";
+import { Search, Youtube, PlaySquare, Film, FileJson, FileText } from "lucide-react";
 
 const HomePage = () => {
   const { clearVideos } = useContext(VideoAnalyticsContext);
@@ -48,6 +48,11 @@ const HomePage = () => {
           icon={FileJson}
           label="JSON File"
         />
+        <AnalyzerButton
+  to="/analytics?type=csv"
+  icon={FileText}
+  label="CSV File"
+/>
       </div>
     </div>
   );

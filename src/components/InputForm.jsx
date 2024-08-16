@@ -6,6 +6,7 @@ import {
   ListVideo,
   Film,
   BarChart3,
+  FileText,
 } from "lucide-react";
 import { getVideos } from "../services/youtubeService";
 
@@ -23,16 +24,22 @@ const InputForm = ({
     e.preventDefault();
     setIsLoading(true);
     clearVideos();
-
+  
     try {
-      if (type === "json") {
+      if (type === "json" || type === "csv") {
         if (!file) {
-          throw new Error("Please select a JSON file");
+          throw new Error(`Please select a ${type.toUpperCase()} file`);
         }
         const reader = new FileReader();
         reader.onload = async (e) => {
-          const json = JSON.parse(e.target.result);
-          await getVideos(json, type, (videos, progress) => {
+          let data;
+          if (type === "json") {
+            data = JSON.parse(e.target.result);
+          } else {
+            // CSV parsing
+            data = e.target.result.split('\n').map(row => row.split(',')[0].trim());
+          }
+          await getVideos(data, type, (videos, progress) => {
             setVideos(videos);
             setLoadingProgress(progress);
           });
@@ -54,11 +61,10 @@ const InputForm = ({
       setIsLoading(false);
     }
   };
-
   const renderInput = () => {
     const inputClasses =
       "w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent transition duration-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:ring-gray-600";
-
+  
     let icon;
     switch (type) {
       case "search":
@@ -76,18 +82,21 @@ const InputForm = ({
       case "json":
         icon = <UploadCloud className="text-gray-500 w-6 h-6" />;
         break;
+      case "csv":
+        icon = <FileText className="text-gray-500 w-6 h-6" />;
+        break;
       default:
         icon = null;
     }
-
+  
     return (
       <div className="mb-4 w-full flex items-center space-x-2">
         {icon}
         <input
-          type={type === "json" ? "file" : "text"}
-          value={type !== "json" ? input : undefined}
+          type={type === "json" || type === "csv" ? "file" : "text"}
+          value={type !== "json" && type !== "csv" ? input : undefined}
           onChange={(e) =>
-            type !== "json"
+            type !== "json" && type !== "csv"
               ? setInput(e.target.value)
               : setFile(e.target.files[0])
           }
@@ -95,7 +104,7 @@ const InputForm = ({
             type === "search" ? "search query" : `YouTube ${type} URL`
           }`}
           className={inputClasses}
-          accept={type === "json" ? ".json" : undefined}
+          accept={type === "json" ? ".json" : type === "csv" ? ".csv" : undefined}
         />
       </div>
     );
