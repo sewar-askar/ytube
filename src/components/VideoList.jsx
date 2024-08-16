@@ -32,7 +32,7 @@ const VideoList = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-6">
+    <div className="flex flex-col items-center justify-center space-y-6 m-5">
       <div className="flex items-center justify-start w-full">
         <label
           htmlFor="sortBy"
