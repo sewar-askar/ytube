@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Eye, ThumbsUp, ThumbsDown, BarChart } from "lucide-react";
+import { ArrowLeft, Eye, ThumbsUp, ThumbsDown, BarChart, Star, MessageCircle } from "lucide-react";
 import { getVideoDetails } from "../services/youtubeService";
-
+import { calculateRating } from "../utils/ratingCalculator";
 const VideoDetailsPage = () => {
   const { videoId } = useParams();
   const [videoDetails, setVideoDetails] = useState(null);
@@ -11,7 +11,8 @@ const VideoDetailsPage = () => {
     const fetchVideoDetails = async () => {
       try {
         const details = await getVideoDetails(videoId);
-        setVideoDetails(details);
+        const rating = calculateRating(details);
+        setVideoDetails({ ...details, rating });
       } catch (error) {
         console.error("Error fetching video details:", error);
       }
@@ -50,6 +51,8 @@ const VideoDetailsPage = () => {
             <Stat icon={ThumbsUp} label="Likes" value={videoDetails.likes.toLocaleString()} />
             <Stat icon={ThumbsDown} label="Dislikes" value={videoDetails.dislikes.toLocaleString()} />
             <Stat icon={BarChart} label="Like/Dislike Ratio" value={`${videoDetails.likeDislikeRatio}%`} />
+            <Stat icon={Star} label="Rating" value={videoDetails.rating} />
+            <Stat icon={MessageCircle} label="Comments" value={videoDetails.comments.toLocaleString()} />
           </div>
           <div className="bg-gray-100 p-4 rounded-lg">
             <h2 className="text-lg sm:text-xl font-semibold mb-2">Description</h2>

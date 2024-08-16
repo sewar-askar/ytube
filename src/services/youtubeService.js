@@ -87,6 +87,7 @@ const processVideoData = async (videoData) => {
       processedVideos.push({
         ...video,
         dislikes,
+        comments: video.comments || 0,
         likeDislikeRatio:
           likes + dislikes > 0
             ? ((likes / (likes + dislikes)) * 100).toFixed(2)
@@ -127,6 +128,7 @@ const processVideoIds = async (videoIds) => {
       publishedAt: details.snippet.publishedAt,
       views: parseInt(stats.viewCount) || 0,
       likes: parseInt(stats.likeCount) || 0,
+      comments: parseInt(stats.commentCount) || 0,
     };
   });
 
@@ -220,6 +222,7 @@ export const getVideoDetails = async (videoId) => {
 
   const likes = parseInt(stats.likeCount) || 0;
   const views = parseInt(stats.viewCount) || 0;
+  const comments = parseInt(stats.commentCount) || 0;
 
   return {
     id: videoId,
@@ -230,6 +233,7 @@ export const getVideoDetails = async (videoId) => {
     views,
     likes,
     dislikes,
+    comments,
     likeDislikeRatio: likes + dislikes > 0 ? ((likes / (likes + dislikes)) * 100).toFixed(2) : "0",
     likeViewRatio: views > 0 ? ((likes / views) * 100).toFixed(2) : "0",
   };
