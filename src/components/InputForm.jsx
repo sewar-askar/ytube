@@ -7,6 +7,7 @@ import {
   Film,
   BarChart3,
   FileText,
+  Link,
 } from "lucide-react";
 import { getVideos } from "../services/youtubeService";
 
@@ -86,6 +87,9 @@ const InputForm = ({
       case "csv":
         icon = <FileText className="text-gray-500 w-5 h-5" />;
         break;
+      case "links":
+        icon = <Link className="text-gray-500 w-5 h-5" />;
+        break;
       default:
         icon = null;
     }
@@ -105,7 +109,7 @@ const InputForm = ({
                 : setFile(e.target.files[0])
             }
             placeholder={`Enter ${
-              type === "search" ? "search query" : `YouTube ${type} URL`
+              type === "search" ? "search query" : type === "links" ? "YouTube video links separated by commas" : `YouTube ${type} URL`
             }`}
             className={`${inputClasses} pl-10`}
             accept={type === "json" ? ".json" : type === "csv" ? ".csv" : undefined}

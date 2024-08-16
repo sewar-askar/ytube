@@ -47,18 +47,18 @@ const AnalyticsPage = () => {
         }
       );
       console.log(`Total videos expected: ${totalVideos}`);
-      setLoadingProgress(100); // Mark as complete
+      setLoadingProgress(100); 
     } catch (error) {
       console.error("Error fetching videos:", error);
-      setLoadingProgress(null); // Reset on error
+      setLoadingProgress(null); 
     } finally {
-      setIsLoading(false); // Ensure the loading state is reset
+      setIsLoading(false); 
     }
   };
 
   const pageTitle = type
-    ? `YouTube ${type.charAt(0).toUpperCase() + type.slice(1)} Analytics`
-    : "YouTube Video Analytics";
+  ? `YouTube ${type === 'links' ? 'Links' : type.charAt(0).toUpperCase() + type.slice(1)} Analytics`
+  : "YouTube Video Analytics";
 
   return (
     <div className="container mx-auto p-4 relative">
