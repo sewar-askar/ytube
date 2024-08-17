@@ -14,7 +14,7 @@ import {
   extractPlaylistId,
 } from "../utils/extractors";
 import { calculateRating } from "../utils/ratingCalculator";
-
+import { analyzeSentiment } from "../services/sentimentService";
 
 export const getChannelId = async (channelUrl) => {
   if (channelUrl.includes("youtube.com/channel/")) {
@@ -181,9 +181,6 @@ export const getVideos = async (input, type, onVideoFetched, videoLimit = 50) =>
     case "csv":
       videoIds = getVideoIdsFromCsv(input);
       break;
-      case "links":
-        videoIds = getVideoIdsFromLinks(input);
-        break;
     default:
       throw new Error("Invalid type");
   }
@@ -265,12 +262,21 @@ export const getVideoDetails = async (videoId) => {
 
   return videoData;
 };
+
 export const getVideoComments = async (videoId) => {
   try {
     const response = await getVideoCommentsApi(videoId);
-    return response.data.items.map(item => ({
+    const comments = response.data.items.map(item => ({
       id: item.id,
       text: item.snippet.topLevelComment.snippet.textDisplay
+    }));
+
+    const commentTexts = comments.map(comment => comment.text);
+    const sentimentScores = await analyzeSentiment(commentTexts);
+
+    return comments.map((comment, index) => ({
+      ...comment,
+      sentimentScore: sentimentScores[index]
     }));
   } catch (error) {
     console.error('Error fetching video comments:', error);

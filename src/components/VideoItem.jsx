@@ -46,16 +46,19 @@ const VideoItem = ({ video }) => {
               Rating: {rating}
             </p>
           </div>
-          <a
-            href={`https://www.youtube.com/watch?v=${video.id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block mt-4 text-gray-700 hover:underline hover:text-gray-900 transition-colors duration-300"
-          >
-            <Link2 className="inline-block w-5 h-5 mr-1" />
-            Watch Video
-          </a>
+          <div>
+        <a
+          href={`https://www.youtube.com/watch?v=${video.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block mt-4 text-gray-700 hover:underline hover:text-gray-900 transition-colors duration-300"
+        >
+          <Link2 className="inline-block w-5 h-5 mr-1" />
+          Watch Video
+        </a>
+      </div>
         </div>
+       
       </div>
     </Link>
   );

@@ -31,14 +31,16 @@ const VideoDetailsPage = () => {
       setComments(fetchedComments);
       
       if (fetchedComments.length > 0) {
-        const commentTexts = fetchedComments.map(comment => comment.text);
-        console.log("Sending comments for analysis:", commentTexts);
-        const sentimentResults = await analyzeSentiment(commentTexts);
-        
-        const totalSentiment = sentimentResults.reduce((sum, result) => sum + parseFloat(result.rating), 0);
-        const averageSentiment = totalSentiment / sentimentResults.length;
-        
-        setSentimentScore(averageSentiment.toFixed(2));
+        const validSentimentScores = fetchedComments
+          .map(comment => comment.sentimentScore)
+          .filter(score => score !== null);
+
+        if (validSentimentScores.length > 0) {
+          const averageSentiment = validSentimentScores.reduce((sum, score) => sum + score, 0) / validSentimentScores.length;
+          setSentimentScore(averageSentiment.toFixed(2));
+        } else {
+          setSentimentScore('N/A');
+        }
       } else {
         setSentimentScore('N/A');
       }
@@ -83,7 +85,7 @@ const VideoDetailsPage = () => {
   <Stat icon={BarChart} label="Like/Dislike Ratio" value={`${videoDetails.likeDislikeRatio}%`} />
   <Stat icon={Star} label="Rating" value={videoDetails.rating} />
   <Stat icon={MessageCircle} label="Comments" value={videoDetails.comments.toLocaleString()} />
-  <Stat icon={Star} label="Avg Sentiment" value={sentimentScore || 'N/A'} />
+  <Stat icon={Star} label="Comments Toxicity" value={`${sentimentScore === 'N/A' || sentimentScore === 'Error' ? sentimentScore : `${sentimentScore}%`}`} />
 </div>
 <button
   onClick={handleFetchComments}
