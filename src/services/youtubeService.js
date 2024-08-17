@@ -13,7 +13,6 @@ import {
   extractVideoId,
   extractPlaylistId,
 } from "../utils/extractors";
-import { calculateRating } from "../utils/ratingCalculator";
 import { analyzeSentiment } from "../services/sentimentService";
 
 export const getChannelId = async (channelUrl) => {
@@ -64,54 +63,30 @@ const fetchDislikesWithRetry = async (
 };
 
 const processVideoData = async (videoData) => {
-  const queue = videoData.map((video) => ({
-    id: video.id,
-    retries: 0,
-    maxRetries: 5,
-    video,
-  }));
-
   const processedVideos = [];
-  const failedVideos = [];
 
-  while (queue.length > 0) {
-    const { id, retries, maxRetries, video } = queue.shift();
-
+  for (const video of videoData) {
     try {
-      const dislikes = await fetchDislikesWithRetry(id, maxRetries);
-      if (dislikes === null) {
-        failedVideos.push(id); // Track the failed video and skip further processing
-        continue;
-      }
+      const dislikesResponse = await getDislikesApi(video.id);
+      const dislikesData = dislikesResponse.data;
 
-      const likes = video.likes || 0;
-      const views = video.views || 0;
+      const rating = dislikesData.rating;
+      const scaledRating = Math.round(Math.min((rating / 5) * 5000));
 
       processedVideos.push({
         ...video,
-        dislikes,
-        comments: video.comments || 0,
-        likeDislikeRatio:
-          likes + dislikes > 0
-            ? ((likes / (likes + dislikes)) * 100).toFixed(2)
-            : "0",
-        likeViewRatio: views > 0 ? ((likes / views) * 100).toFixed(2) : "0",
+        dislikes: dislikesData.dislikes,
+        likes: dislikesData.likes,
+        views: dislikesData.viewCount,
+        rating: scaledRating,
+        likeDislikeRatio: ((dislikesData.likes / (dislikesData.likes + dislikesData.dislikes)) * 100).toFixed(2),
+        likeViewRatio: ((dislikesData.likes / dislikesData.viewCount) * 100).toFixed(2),
       });
     } catch (error) {
-      if (retries < maxRetries) {
-        queue.push({ id, retries: retries + 1, maxRetries, video });
-      } else {
-        failedVideos.push(id);
-      }
+      console.error(`Error processing video ${video.id}:`, error);
     }
 
     await new Promise((resolve) => setTimeout(resolve, 10));
-  }
-
-  if (failedVideos.length > 0) {
-    console.error(
-      `Failed to fetch dislikes for videos: ${failedVideos.join(", ")}`
-    );
   }
 
   return processedVideos;
@@ -132,6 +107,7 @@ const processVideoIds = async (videoIds) => {
       views: parseInt(stats.viewCount) || 0,
       likes: parseInt(stats.likeCount) || 0,
       comments: parseInt(stats.commentCount) || 0,
+      
     };
   });
 
@@ -238,11 +214,12 @@ export const getVideoDetails = async (videoId) => {
 
   const stats = statsResponse.data.items[0].statistics;
   const details = detailsResponse.data.items[0].snippet;
-  const dislikes = dislikesResponse.data.dislikes;
+  const dislikesData = dislikesResponse.data;
 
-  const likes = parseInt(stats.likeCount) || 0;
-  const views = parseInt(stats.viewCount) || 0;
-  const comments = parseInt(stats.commentCount) || 0;
+  const scaledRating = (dislikesData.rating)
+
+
+ 
 
   const videoData = {
     id: videoId,
@@ -250,15 +227,14 @@ export const getVideoDetails = async (videoId) => {
     description: details.description,
     publishedAt: details.publishedAt,
     thumbnail: details.thumbnails.high.url,
-    views,
-    likes,
-    dislikes,
-    comments,
-    likeDislikeRatio: likes + dislikes > 0 ? ((likes / (likes + dislikes)) * 100).toFixed(2) : "0",
-    likeViewRatio: views > 0 ? ((likes / views) * 100).toFixed(2) : "0",
+    views: dislikesData.viewCount,
+    likes: dislikesData.likes,
+    dislikes: dislikesData.dislikes,
+    comments: parseInt(stats.commentCount) || 0,
+    likeDislikeRatio: ((dislikesData.likes / (dislikesData.likes + dislikesData.dislikes)) * 100).toFixed(2),
+    likeViewRatio: ((dislikesData.likes / dislikesData.viewCount) * 100).toFixed(2),
+    rating: scaledRating,
   };
-
-  videoData.rating = calculateRating(videoData);
 
   return videoData;
 };

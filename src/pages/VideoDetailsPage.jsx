@@ -158,7 +158,7 @@ const VideoDetailsPage = () => {
           </div>
         </div>
       )}
-      <div className="bg-gray-100 p-4 rounded-lg">
+      <div className="bg-gray-100 p-4 rounded-lg my-4">
             <h2 className="text-lg sm:text-xl font-semibold mb-2">Description</h2>
             <p className="text-gray-700 text-sm sm:text-base">{videoDetails.description}</p>
           </div>

@@ -1,10 +1,12 @@
 import React from "react";
 import { Eye, ThumbsUp, ThumbsDown, BarChart, Link2, Star, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { calculateRating } from "../utils/ratingCalculator";
 
 const VideoItem = ({ video }) => {
-  const rating = calculateRating(video);
+
+  const rating = video.rating;
+
+  console.log(video);
 
   return (
     <Link to={`/video/${video.id}`} className="block">
