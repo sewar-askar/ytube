@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Eye, ThumbsUp, ThumbsDown, BarChart, AlertTriangle, MessageCircle } from "lucide-react";
+import { ArrowLeft, Eye, ThumbsUp, ThumbsDown, BarChart, AlertTriangle, MessageCircle, Star, Award } from "lucide-react";
 import { getVideoDetails, getVideoComments } from "../services/youtubeService";
 import { analyzeSentiment } from "../services/sentimentService";
+import { calculateRecommendationScore } from "../utils/ratingCalculator";
 
 const VideoDetailsPage = () => {
   const { videoId } = useParams();
@@ -10,7 +11,7 @@ const VideoDetailsPage = () => {
   const [comments, setComments] = useState([]);
   const [sentimentScore, setSentimentScore] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [commentCount, setCommentCount] = useState(20);
+  const [commentCount, setCommentCount] = useState(10);
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -28,14 +29,14 @@ const VideoDetailsPage = () => {
   const handleFetchComments = async () => {
     setIsLoading(true);
     try {
-      const fetchedComments = await getVideoComments(videoId, commentCount);
+      const fetchedComments = await getVideoComments(videoId);
       setComments(fetchedComments);
       
       if (fetchedComments.length > 0) {
         const validSentimentScores = fetchedComments
           .map(comment => comment.sentimentScore)
           .filter(score => score !== null);
-  
+
         if (validSentimentScores.length > 0) {
           const averageSentiment = validSentimentScores.reduce((sum, score) => sum + score, 0) / validSentimentScores.length;
           setSentimentScore(averageSentiment.toFixed(2));
@@ -83,9 +84,11 @@ const VideoDetailsPage = () => {
   <Stat icon={Eye} label="Views" value={videoDetails.views.toLocaleString()} />
   <Stat icon={ThumbsUp} label="Likes" value={videoDetails.likes.toLocaleString()} />
   <Stat icon={ThumbsDown} label="Dislikes" value={videoDetails.dislikes.toLocaleString()} />
-  <Stat icon={BarChart} label="Like/Dislike Ratio" value={`${videoDetails.likeDislikeRatio}%`} />
-  <Stat icon={AlertTriangle} label="Comments Toxicity" value={`${sentimentScore === 'N/A' || sentimentScore === 'Error' ? sentimentScore : `${sentimentScore}%`}`} />
   <Stat icon={MessageCircle} label="Comments" value={videoDetails.comments.toLocaleString()} />
+  <Stat icon={AlertTriangle} label="Comments Toxicity" value={`${sentimentScore === 'N/A' || sentimentScore === 'Error' ? sentimentScore : `${sentimentScore}%`}`} />
+  <Stat icon={BarChart} label="Like/Dislike Ratio" value={`${videoDetails.likeDislikeRatio}%`} />
+  <Stat icon={Star} label="Rating" value={`${videoDetails.rating.toFixed(3)}%`} />
+  <Stat icon={Award} label="Recommendation Score" value={`${calculateRecommendationScore(videoDetails.likes, videoDetails.dislikes, videoDetails.views, videoDetails.comments).toFixed(2)}%`} />
 </div>
 <div className="flex flex-col sm:flex-row items-center justify-between mb-5 space-y-4 sm:space-y-0 sm:space-x-4">
   <div className="w-full sm:w-1/3">
@@ -125,7 +128,7 @@ const VideoDetailsPage = () => {
 
       {comments.length > 0 && (
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Top {commentCount} Comments (Ranked by Toxicity)</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Top 20 Comments</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {comments
               .slice(0, commentCount)
@@ -158,7 +161,7 @@ const VideoDetailsPage = () => {
           </div>
         </div>
       )}
-      <div className="bg-gray-100 p-4 rounded-lg my-4">
+      <div className="bg-gray-100 p-4 rounded-lg">
             <h2 className="text-lg sm:text-xl font-semibold mb-2">Description</h2>
             <p className="text-gray-700 text-sm sm:text-base">{videoDetails.description}</p>
           </div>

@@ -1,6 +1,7 @@
 import React from "react";
-import { Eye, ThumbsUp, ThumbsDown, BarChart, Link2, Star, MessageCircle } from "lucide-react";
+import { Eye, ThumbsUp, ThumbsDown, BarChart, Link2, Star, MessageCircle, Award } from "lucide-react";
 import { Link } from "react-router-dom";
+import { calculateRecommendationScore } from "../utils/ratingCalculator";
 
 const VideoItem = ({ video }) => {
 
@@ -44,9 +45,13 @@ const VideoItem = ({ video }) => {
               Like/Views Ratio: {video.likeViewRatio}%
             </p>
             <p className="flex items-center text-gray-600">
-              <Star className="w-5 h-5 mr-2" />
-              Rating: {rating}
-            </p>
+  <Star className="w-5 h-5 mr-2" />
+  Rating: {rating}
+</p>
+<p className="flex items-center text-gray-600">
+  <Award className="w-5 h-5 mr-2" />
+  Recommendation Score: {calculateRecommendationScore(video.likes, video.dislikes, video.views, video.comments).toFixed(2)}%
+</p>
           </div>
           <div>
         <a
