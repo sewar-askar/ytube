@@ -263,9 +263,9 @@ export const getVideoDetails = async (videoId) => {
   return videoData;
 };
 
-export const getVideoComments = async (videoId) => {
+export const getVideoComments = async (videoId, commentCount) => {
   try {
-    const response = await getVideoCommentsApi(videoId);
+    const response = await getVideoCommentsApi(videoId, commentCount);
     const comments = response.data.items.map(item => ({
       id: item.id,
       text: item.snippet.topLevelComment.snippet.textDisplay
