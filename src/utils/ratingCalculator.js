@@ -20,5 +20,5 @@ export const calculateRecommendationScore = (likes, dislikes, views, commentCoun
     commentRatio * commentRatioWeight
   );
   
-  return recommendationScore * 100; // Scale to 0-100 for easier interpretation
+  return recommendationScore * 200; 
 };

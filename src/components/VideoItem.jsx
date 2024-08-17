@@ -7,7 +7,7 @@ const VideoItem = ({ video }) => {
 
   const rating = video.rating;
 
-  console.log(video);
+
 
   return (
     <Link to={`/video/${video.id}`} className="block">

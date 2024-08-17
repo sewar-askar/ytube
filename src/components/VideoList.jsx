@@ -91,6 +91,14 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
               Like/Views Ratio
             </a>
             <a
+                href="#"
+                className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+                role="menuitem"
+                onClick={() => selectOption("recommendationScore", "Recommendation Score")}
+              >
+                Recommendation Score
+              </a>
+            <a
   href="#"
   className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
   role="menuitem"
@@ -125,7 +133,9 @@ const VideoList = () => {
         case "ratio":
           return parseFloat(b.likeViewRatio) - parseFloat(a.likeViewRatio);
           case "rating":
-  return parseFloat(b.rating) - parseFloat(a.rating);
+            return parseFloat(b.rating) - parseFloat(a.rating);
+        case "recommendationScore":
+          return parseFloat(b.recommendationScore) - parseFloat(a.recommendationScore);
         default:
           return new Date(b.publishedAt) - new Date(a.publishedAt);
       }

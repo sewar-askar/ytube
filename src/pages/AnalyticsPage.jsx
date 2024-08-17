@@ -24,11 +24,7 @@ const AnalyticsPage = () => {
     }
   }, [type, navigate, clearVideos]);
 
-  useEffect(() => {
-    if (loadingProgress !== null) {
-      console.log(`Progress updated: ${loadingProgress}%`);
-    }
-  }, [loadingProgress]);
+
 
   const handleFetchVideos = async (input) => {
     setLoadingProgress(0);
@@ -39,17 +35,15 @@ const AnalyticsPage = () => {
         input,
         type,
         (updatedVideos, progress) => {
-          console.log(
-            `Fetched ${updatedVideos.length} videos, Progress: ${progress}%`
-          );
+         
           setVideos(updatedVideos);
           setLoadingProgress(progress);
         }
       );
-      console.log(`Total videos expected: ${totalVideos}`);
+
       setLoadingProgress(100); 
     } catch (error) {
-      console.error("Error fetching videos:", error);
+     
       setLoadingProgress(null); 
     } finally {
       setIsLoading(false); 
