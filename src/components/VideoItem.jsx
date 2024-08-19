@@ -2,6 +2,7 @@ import React from "react";
 import { Eye, ThumbsUp, ThumbsDown, BarChart, Link2, Star, MessageCircle, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { calculateRecommendationScore } from "../utils/ratingCalculator";
+import { TrendingUp } from "lucide-react";
 
 const VideoItem = ({ video }) => {
 
@@ -52,6 +53,14 @@ const VideoItem = ({ video }) => {
   <Award className="w-5 h-5 mr-2" />
   Recommendation Score: {calculateRecommendationScore(video.likes, video.dislikes, video.views, video.comments).toFixed(2)}%
 </p>
+
+
+  <p className="flex items-center text-gray-600">
+    <TrendingUp className="w-5 h-5 mr-2" />
+    Super Filter Score: {video?.superScore?.toFixed(2)}
+  </p>
+
+
           </div>
           <div>
         <a

@@ -2,6 +2,7 @@ import React, { useContext, useMemo, useState } from "react";
 import { VideoAnalyticsContext } from "../context/VideoAnalyticsContext";
 import VideoItem from "./VideoItem";
 import { ChevronDown } from "lucide-react";
+import { calculateSuperFilterScore } from "../utils/ratingCalculator";
 
 const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -98,6 +99,14 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
               >
                 Recommendation Score
               </a>
+              <a
+  href="#"
+  className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+  role="menuitem"
+  onClick={() => selectOption("superFilter", "Super Filter")}
+>
+  Super Filter
+</a>
             <a
   href="#"
   className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
@@ -118,6 +127,11 @@ const VideoList = () => {
 
   const sortedVideos = useMemo(() => {
     if (!videos || videos.length === 0) return [];
+    
+    if (sortBy === "superFilter") {
+      return calculateSuperFilterScore(videos);
+    }
+  
     return [...videos].sort((a, b) => {
       switch (sortBy) {
         case "views":
@@ -127,13 +141,11 @@ const VideoList = () => {
         case "dislikes":
           return (b.dislikes || 0) - (a.dislikes || 0);
         case "likeDislikeRatio":
-          return (
-            parseFloat(b.likeDislikeRatio) - parseFloat(a.likeDislikeRatio)
-          );
+          return parseFloat(b.likeDislikeRatio) - parseFloat(a.likeDislikeRatio);
         case "ratio":
           return parseFloat(b.likeViewRatio) - parseFloat(a.likeViewRatio);
-          case "rating":
-            return parseFloat(b.rating) - parseFloat(a.rating);
+        case "rating":
+          return parseFloat(b.rating) - parseFloat(a.rating);
         case "recommendationScore":
           return parseFloat(b.recommendationScore) - parseFloat(a.recommendationScore);
         default:
