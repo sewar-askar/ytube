@@ -254,7 +254,11 @@ export const getVideoDetails = async (videoId) => {
 
 import { analyzeCommentsWithGemini } from "../api/geminiApi";
 
-export const getVideoComments = async (videoId, commentCount) => {
+export const getVideoComments = async (
+  videoId,
+  commentCount,
+  analysisLanguage
+) => {
   try {
     const response = await getVideoCommentsApi(videoId, commentCount);
     const comments = response.data.items.map((item) => ({
@@ -266,7 +270,10 @@ export const getVideoComments = async (videoId, commentCount) => {
     const sentimentScores = await analyzeSentiment(commentTexts);
 
     // Analyze comments with Gemini
-    const geminiAnalysis = await analyzeCommentsWithGemini(commentTexts);
+    const geminiAnalysis = await analyzeCommentsWithGemini(
+      commentTexts,
+      analysisLanguage
+    );
 
     return {
       comments: comments.map((comment, index) => ({

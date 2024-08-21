@@ -11,6 +11,7 @@ import {
   Star,
   Award,
 } from "lucide-react";
+import LanguageDropdown from "../components/LanguageDropdown";
 import { getVideoDetails, getVideoComments } from "../services/youtubeService";
 import { analyzeSentiment } from "../services/sentimentService";
 import { calculateRecommendationScore } from "../utils/ratingCalculator";
@@ -25,6 +26,7 @@ const VideoDetailsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [commentCount, setCommentCount] = useState(10);
   const [geminiAnalysis, setGeminiAnalysis] = useState("");
+  const [analysisLanguage, setAnalysisLanguage] = useState("English");
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -43,7 +45,7 @@ const VideoDetailsPage = () => {
     setIsLoading(true);
     try {
       const { comments: fetchedComments, geminiAnalysis } =
-        await getVideoComments(videoId, commentCount);
+        await getVideoComments(videoId, commentCount, analysisLanguage);
       setComments(fetchedComments);
 
       if (fetchedComments.length > 0) {
@@ -97,7 +99,7 @@ const VideoDetailsPage = () => {
             className="w-full h-full"
           ></iframe>
         </div>
-        <div className="p-4 sm:p-6">
+        <div className="p-16 sm:p-16">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4">
             {videoDetails.title}
           </h1>
@@ -171,6 +173,10 @@ const VideoDetailsPage = () => {
                 min="1"
               />
             </div>
+            <LanguageDropdown
+              selectedLanguage={analysisLanguage}
+              setSelectedLanguage={setAnalysisLanguage}
+            />
             <button
               onClick={handleFetchComments}
               disabled={isLoading}
@@ -214,7 +220,17 @@ const VideoDetailsPage = () => {
           </h2>
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
-            className="prose max-w-none"
+            className={`prose max-w-none ${
+              analysisLanguage === "Arabic" ? "text-right" : ""
+            }`}
+            components={{
+              p: ({ node, ...props }) => (
+                <p
+                  dir={analysisLanguage === "Arabic" ? "rtl" : "ltr"}
+                  {...props}
+                />
+              ),
+            }}
           >
             {geminiAnalysis}
           </ReactMarkdown>
