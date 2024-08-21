@@ -79,8 +79,14 @@ const processVideoData = async (videoData) => {
         likes: dislikesData.likes,
         views: dislikesData.viewCount,
         rating: scaledRating,
-        likeDislikeRatio: ((dislikesData.likes / (dislikesData.likes + dislikesData.dislikes)) * 100).toFixed(2),
-        likeViewRatio: ((dislikesData.likes / dislikesData.viewCount) * 100).toFixed(2),
+        likeDislikeRatio: (
+          (dislikesData.likes / (dislikesData.likes + dislikesData.dislikes)) *
+          100
+        ).toFixed(2),
+        likeViewRatio: (
+          (dislikesData.likes / dislikesData.viewCount) *
+          100
+        ).toFixed(2),
       });
     } catch (error) {
       console.error(`Error processing video ${video.id}:`, error);
@@ -107,7 +113,6 @@ const processVideoIds = async (videoIds) => {
       views: parseInt(stats.viewCount) || 0,
       likes: parseInt(stats.likeCount) || 0,
       comments: parseInt(stats.commentCount) || 0,
-      
     };
   });
 
@@ -135,7 +140,12 @@ const processAndSetVideos = async (videoIds, onVideoFetched) => {
   }
 };
 
-export const getVideos = async (input, type, onVideoFetched, videoLimit = 50) => {
+export const getVideos = async (
+  input,
+  type,
+  onVideoFetched,
+  videoLimit = 50
+) => {
   let videoIds;
 
   switch (type) {
@@ -197,13 +207,13 @@ const getVideoIdsFromCsv = (csvData) => {
 };
 
 const getVideoIdsFromLinks = (links) => {
-  return links.split(',')
-    .map(link => link.trim())
-    .map(link => extractVideoId(link))
-    .filter(id => id !== null)
-    .join(',');
+  return links
+    .split(",")
+    .map((link) => link.trim())
+    .map((link) => extractVideoId(link))
+    .filter((id) => id !== null)
+    .join(",");
 };
-
 
 export const getVideoDetails = async (videoId) => {
   const [statsResponse, detailsResponse, dislikesResponse] = await Promise.all([
@@ -216,10 +226,7 @@ export const getVideoDetails = async (videoId) => {
   const details = detailsResponse.data.items[0].snippet;
   const dislikesData = dislikesResponse.data;
 
-  const scaledRating = (dislikesData.rating)
-
-
- 
+  const scaledRating = dislikesData.rating;
 
   const videoData = {
     id: videoId,
@@ -231,31 +238,45 @@ export const getVideoDetails = async (videoId) => {
     likes: dislikesData.likes,
     dislikes: dislikesData.dislikes,
     comments: parseInt(stats.commentCount) || 0,
-    likeDislikeRatio: ((dislikesData.likes / (dislikesData.likes + dislikesData.dislikes)) * 100).toFixed(2),
-    likeViewRatio: ((dislikesData.likes / dislikesData.viewCount) * 100).toFixed(2),
+    likeDislikeRatio: (
+      (dislikesData.likes / (dislikesData.likes + dislikesData.dislikes)) *
+      100
+    ).toFixed(2),
+    likeViewRatio: (
+      (dislikesData.likes / dislikesData.viewCount) *
+      100
+    ).toFixed(2),
     rating: scaledRating,
   };
 
   return videoData;
 };
 
+import { analyzeCommentsWithGemini } from "../api/geminiApi";
+
 export const getVideoComments = async (videoId, commentCount) => {
   try {
     const response = await getVideoCommentsApi(videoId, commentCount);
-    const comments = response.data.items.map(item => ({
+    const comments = response.data.items.map((item) => ({
       id: item.id,
-      text: item.snippet.topLevelComment.snippet.textDisplay
+      text: item.snippet.topLevelComment.snippet.textDisplay,
     }));
 
-    const commentTexts = comments.map(comment => comment.text);
+    const commentTexts = comments.map((comment) => comment.text);
     const sentimentScores = await analyzeSentiment(commentTexts);
 
-    return comments.map((comment, index) => ({
-      ...comment,
-      sentimentScore: sentimentScores[index]
-    }));
+    // Analyze comments with Gemini
+    const geminiAnalysis = await analyzeCommentsWithGemini(commentTexts);
+
+    return {
+      comments: comments.map((comment, index) => ({
+        ...comment,
+        sentimentScore: sentimentScores[index],
+      })),
+      geminiAnalysis,
+    };
   } catch (error) {
-    console.error('Error fetching video comments:', error);
+    console.error("Error fetching video comments:", error);
     throw error;
   }
 };

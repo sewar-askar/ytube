@@ -1,14 +1,20 @@
 import React from "react";
-import { Eye, ThumbsUp, ThumbsDown, BarChart, Link2, Star, MessageCircle, Award } from "lucide-react";
+import {
+  Eye,
+  ThumbsUp,
+  ThumbsDown,
+  BarChart,
+  Link2,
+  Star,
+  MessageCircle,
+  Award,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { calculateRecommendationScore } from "../utils/ratingCalculator";
 import { TrendingUp } from "lucide-react";
 
 const VideoItem = ({ video }) => {
-
   const rating = video.rating;
-
-
 
   return (
     <Link to={`/video/${video.id}`} className="block">
@@ -34,9 +40,9 @@ const VideoItem = ({ video }) => {
               {video.dislikes.toLocaleString()} Dislikes
             </p>
             <p className="flex items-center text-gray-600">
-  <MessageCircle className="w-5 h-5 mr-2" />
-  {video.comments.toLocaleString()} Comments
-</p>
+              <MessageCircle className="w-5 h-5 mr-2" />
+              {video.comments.toLocaleString()} Comments
+            </p>
             <p className="flex items-center text-gray-600">
               <BarChart className="w-5 h-5 mr-2" />
               Like/Dislike Ratio: {video.likeDislikeRatio}%
@@ -46,35 +52,38 @@ const VideoItem = ({ video }) => {
               Like/Views Ratio: {video.likeViewRatio}%
             </p>
             <p className="flex items-center text-gray-600">
-  <Star className="w-5 h-5 mr-2" />
-  Rating: {rating}
-</p>
-<p className="flex items-center text-gray-600">
-  <Award className="w-5 h-5 mr-2" />
-  Recommendation Score: {calculateRecommendationScore(video.likes, video.dislikes, video.views, video.comments).toFixed(2)}%
-</p>
+              <Star className="w-5 h-5 mr-2" />
+              Rating: {rating}
+            </p>
+            <p className="flex items-center text-gray-600">
+              <Award className="w-5 h-5 mr-2" />
+              Recommendation Score:{" "}
+              {calculateRecommendationScore(
+                video.likes,
+                video.dislikes,
+                video.views,
+                video.comments
+              ).toFixed(2)}
+              %
+            </p>
 
-
-  <p className="flex items-center text-gray-600">
-    <TrendingUp className="w-5 h-5 mr-2" />
-    Super Filter Score: {video?.superScore?.toFixed(2)}
-  </p>
-
-
+            <p className="flex items-center text-gray-600">
+              <TrendingUp className="w-5 h-5 mr-2" />
+              Super Filter Score: {video?.superScore?.toFixed(2)}
+            </p>
           </div>
           <div>
-        <a
-          href={`https://www.youtube.com/watch?v=${video.id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block mt-4 text-gray-700 hover:underline hover:text-gray-900 transition-colors duration-300"
-        >
-          <Link2 className="inline-block w-5 h-5 mr-1" />
-          Watch Video
-        </a>
-      </div>
+            <a
+              href={`https://www.youtube.com/watch?v=${video.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mt-4 text-gray-700 hover:underline hover:text-gray-900 transition-colors duration-300"
+            >
+              <Link2 className="inline-block w-5 h-5 mr-1" />
+              Watch Video
+            </a>
+          </div>
         </div>
-       
       </div>
     </Link>
   );
