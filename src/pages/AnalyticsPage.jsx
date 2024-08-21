@@ -24,8 +24,6 @@ const AnalyticsPage = () => {
     }
   }, [type, navigate, clearVideos]);
 
-
-
   const handleFetchVideos = async (input) => {
     setLoadingProgress(0);
     setIsLoading(true);
@@ -35,35 +33,37 @@ const AnalyticsPage = () => {
         input,
         type,
         (updatedVideos, progress) => {
-         
           setVideos(updatedVideos);
           setLoadingProgress(progress);
         }
       );
 
-      setLoadingProgress(100); 
+      setLoadingProgress(100);
     } catch (error) {
-     
-      setLoadingProgress(null); 
+      setLoadingProgress(null);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
   const pageTitle = type
-  ? `YouTube ${type === 'links' ? 'Links' : type.charAt(0).toUpperCase() + type.slice(1)} Analytics`
-  : "YouTube Video Analytics";
+    ? `YouTube ${
+        type === "links"
+          ? "Links"
+          : type.charAt(0).toUpperCase() + type.slice(1)
+      } Analytics`
+    : "YouTube Video Analytics";
 
   return (
     <div className="container mx-auto p-4 relative">
       <Link
         to="/"
-        className="p-2 rounded inline-block mb-4 text-gray-600 hover:text-white hover:bg-black transition-colors duration-300"
+        className="p-2 rounded inline-block mb-4 text-gray-900 hover:text-white hover:bg-red-500 transition-colors duration-300"
         aria-label="Back to Home"
       >
         <ArrowLeft className="w-6 h-6" />
       </Link>
-      <h1 className="text-2xl font-bold mb-4">{pageTitle}</h1>
+      <h1 className="text-2xl font-bold mb-4 text-gray-900">{pageTitle}</h1>
       <InputForm
         type={type}
         setLoadingProgress={setLoadingProgress}
@@ -79,14 +79,14 @@ const AnalyticsPage = () => {
                 value={loadingProgress}
                 text={`${loadingProgress.toFixed(0)}%`}
                 styles={buildStyles({
-                  pathColor: `#4b5563`,
-                  textColor: "#4b5563",
+                  pathColor: `#FF0000`,
+                  textColor: "#FF0000",
                   trailColor: "#e5e7eb",
                   textSize: "14px",
                 })}
               />
             </div>
-            <div className="mt-2 text-base text-gray-950 font-bold ">
+            <div className="mt-2 text-base text-gray-900 font-bold ">
               Loading ...
             </div>
           </div>

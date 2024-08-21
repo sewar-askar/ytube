@@ -22,7 +22,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
       <div>
         <button
           type="button"
-          className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 text-sm font-medium text-gray-950 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 text-sm font-medium text-gray-900 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           id="menu-button"
           aria-expanded="true"
           aria-haspopup="true"
@@ -43,7 +43,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
           <div className="py-1" role="none">
             <a
               href="#"
-              className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+              className="text-gray-900 block px-4 py-2 text-sm hover:bg-red-100"
               role="menuitem"
               onClick={() => selectOption("publishedAt", "Date (newest first)")}
             >
@@ -51,7 +51,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
             </a>
             <a
               href="#"
-              className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+              className="text-gray-900 block px-4 py-2 text-sm hover:bg-red-100"
               role="menuitem"
               onClick={() => selectOption("views", "Views")}
             >
@@ -59,7 +59,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
             </a>
             <a
               href="#"
-              className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+              className="text-gray-900 block px-4 py-2 text-sm hover:bg-red-100"
               role="menuitem"
               onClick={() => selectOption("likes", "Likes")}
             >
@@ -67,7 +67,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
             </a>
             <a
               href="#"
-              className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+              className="text-gray-900 block px-4 py-2 text-sm hover:bg-red-100"
               role="menuitem"
               onClick={() => selectOption("dislikes", "Dislikes")}
             >
@@ -75,7 +75,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
             </a>
             <a
               href="#"
-              className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+              className="text-gray-900 block px-4 py-2 text-sm hover:bg-red-100"
               role="menuitem"
               onClick={() =>
                 selectOption("likeDislikeRatio", "Like/Dislike Ratio")
@@ -85,7 +85,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
             </a>
             <a
               href="#"
-              className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+              className="text-gray-900 block px-4 py-2 text-sm hover:bg-red-100"
               role="menuitem"
               onClick={() => selectOption("ratio", "Like/Views Ratio")}
             >
@@ -93,7 +93,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
             </a>
             <a
               href="#"
-              className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+              className="text-gray-900 block px-4 py-2 text-sm hover:bg-red-100"
               role="menuitem"
               onClick={() =>
                 selectOption("recommendationScore", "Recommendation Score")
@@ -103,7 +103,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
             </a>
             <a
               href="#"
-              className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+              className="text-gray-900 block px-4 py-2 text-sm hover:bg-red-100"
               role="menuitem"
               onClick={() => selectOption("superFilter", "Super Filter")}
             >
@@ -111,7 +111,7 @@ const DropdownMenu = ({ selectedOption, setSelectedOption }) => {
             </a>
             <a
               href="#"
-              className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+              className="text-gray-900 block px-4 py-2 text-sm hover:bg-red-100"
               role="menuitem"
               onClick={() => selectOption("rating", "Rating")}
             >
@@ -167,7 +167,6 @@ const VideoList = () => {
 
   return (
     <>
-      {" "}
       <DropdownMenu selectedOption={sortBy} setSelectedOption={setSortBy} />
       <div className="flex flex-col items-center justify-center space-y-6 mt-5">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -32,7 +32,7 @@ const LanguageDropdown = ({ selectedLanguage, setSelectedLanguage }) => {
       <div>
         <button
           type="button"
-          className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 text-sm font-medium text-gray-950 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           onClick={toggleDropdown}
         >
           {selectedLanguage}

@@ -26,7 +26,7 @@ const InputForm = ({
     e.preventDefault();
     setIsLoading(true);
     clearVideos();
-  
+
     try {
       if (type === "json" || type === "csv") {
         if (!file) {
@@ -39,7 +39,9 @@ const InputForm = ({
             data = JSON.parse(e.target.result);
           } else {
             // CSV parsing
-            data = e.target.result.split('\n').map(row => row.split(',')[0].trim());
+            data = e.target.result
+              .split("\n")
+              .map((row) => row.split(",")[0].trim());
           }
           await getVideos(data, type, (videos, progress) => {
             setVideos(videos);
@@ -50,10 +52,15 @@ const InputForm = ({
         };
         reader.readAsText(file);
       } else {
-        await getVideos(input, type, (videos, progress) => {
-          setVideos(videos);
-          setLoadingProgress(progress);
-        }, videoLimit);
+        await getVideos(
+          input,
+          type,
+          (videos, progress) => {
+            setVideos(videos);
+            setLoadingProgress(progress);
+          },
+          videoLimit
+        );
         setLoadingProgress(100);
         setIsLoading(false);
       }
@@ -65,7 +72,7 @@ const InputForm = ({
   };
   const renderInput = () => {
     const inputClasses =
-      "w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent transition duration-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:ring-gray-600";
+      "w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent transition duration-300";
 
     let icon;
     switch (type) {
@@ -93,7 +100,7 @@ const InputForm = ({
       default:
         icon = null;
     }
-  
+
     return (
       <div className="w-full space-y-4">
         <div className="relative">
@@ -109,10 +116,16 @@ const InputForm = ({
                 : setFile(e.target.files[0])
             }
             placeholder={`Enter ${
-              type === "search" ? "search query" : type === "links" ? "YouTube video links separated by commas" : `YouTube ${type} URL`
+              type === "search"
+                ? "search query"
+                : type === "links"
+                ? "YouTube video links separated by commas"
+                : `YouTube ${type} URL`
             }`}
             className={`${inputClasses} pl-10`}
-            accept={type === "json" ? ".json" : type === "csv" ? ".csv" : undefined}
+            accept={
+              type === "json" ? ".json" : type === "csv" ? ".csv" : undefined
+            }
           />
         </div>
         {type === "search" && (
@@ -120,13 +133,17 @@ const InputForm = ({
             <input
               type="number"
               value={videoLimit}
-              onChange={(e) => setVideoLimit(Math.max(1, Math.min(200, parseInt(e.target.value) || 1)))}
+              onChange={(e) =>
+                setVideoLimit(
+                  Math.max(1, Math.min(200, parseInt(e.target.value) || 1))
+                )
+              }
               placeholder="Video limit"
               className={`${inputClasses} w-1/3`}
               min="1"
               max="200"
             />
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-gray-500">
               Video limit (1-50)
             </span>
           </div>
@@ -138,12 +155,12 @@ const InputForm = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg space-y-6 max-w-md mx-auto"
+      className="flex flex-col items-center justify-center p-6 bg-white rounded-lg shadow-lg space-y-6 max-w-md mx-auto"
     >
       {renderInput()}
       <button
         type="submit"
-        className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-black text-white rounded-lg shadow-md hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition duration-300"
+        className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-white hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-300"
       >
         <BarChart3 className="w-5 h-5 mr-2" />
         Get Insights
