@@ -50,3 +50,16 @@ button {
     height: 540px;
   }
 }
+
+.grid > *:nth-child(odd) {
+  transform: translateY(-22px);
+}
+
+.grid > *:nth-child(even) {
+  transform: translateY(22px);
+}
+
+.grid > *:hover {
+  transform: scale(1.05) rotate(-3deg) translateY(0) !important;
+  z-index: 10;
+}

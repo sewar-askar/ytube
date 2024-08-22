@@ -17,8 +17,8 @@ const VideoItem = ({ video }) => {
   const rating = video.rating;
 
   return (
-    <Link to={`/video/${video.id}`} className="block">
-      <div className="transition duration-300 transform hover:-translate-y-1 bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-xl">
+    <div className="transition duration-300 transform hover:-translate-y-1 bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-xl">
+      <Link to={`/video/${video.id}`} className="block">
         <img
           src={video.thumbnail}
           alt={video.title}
@@ -72,20 +72,20 @@ const VideoItem = ({ video }) => {
               Super Filter Score: {video?.superScore?.toFixed(2)}
             </p>
           </div>
-          <div>
-            <a
-              href={`https://www.youtube.com/watch?v=${video.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block mt-4 text-gray-600 hover:underline hover:text-blue-500 transition-colors duration-300"
-            >
-              <Link2 className="inline-block w-5 h-5 mr-1" />
-              Watch Video
-            </a>
-          </div>
         </div>
+      </Link>
+      <div className="px-4 pb-4">
+        <a
+          href={`https://www.youtube.com/watch?v=${video.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block mt-4 text-gray-600 hover:underline hover:text-blue-500 transition-colors duration-300"
+        >
+          <Link2 className="inline-block w-5 h-5 mr-1" />
+          Watch Video
+        </a>
       </div>
-    </Link>
+    </div>
   );
 };
 
