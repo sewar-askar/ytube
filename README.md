@@ -79,6 +79,10 @@ YouTube Video Analytics is a powerful React application that provides in-depth a
 4. Click "Get Insights" to fetch and analyze the data.
 5. Explore the detailed analytics and insights provided for each video.
 
+## Live Demo
+
+Check out the live version of this project: [Youtube Analyzer](https://rococo-douhua-566329.netlify.app/)
+
 ## Project Structure
 
 The project follows a modular structure with components, pages, services, and utilities separated for better organization and maintainability. Key directories include:
