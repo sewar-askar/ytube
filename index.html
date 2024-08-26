@@ -1,13 +1,71 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="apple-touch-icon" href="/icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>Youtube Analyzer</title>
+    <meta
+      name="description"
+      content="YouTube Video Analytics: Analyze and gain insights from YouTube videos, channels, and playlists. Get comprehensive statistics and AI-powered analysis."
+    />
+    <meta
+      name="keywords"
+      content="YouTube, analytics, video analysis, channel insights, sentiment analysis, engagement metrics"
+    />
+    <meta name="author" content="Your Name or Company Name" />
+    <meta property="og:title" content="YouTube Video Analytics" />
+    <meta
+      property="og:description"
+      content="Comprehensive YouTube video analysis tool for creators and marketers."
+    />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content="https://your-website-url.com" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        "
+      >
+        <svg
+          width="50"
+          height="50"
+          viewBox="0 0 38 38"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          stroke="#FF0000"
+        >
+          <g fill="none" fill-rule="evenodd">
+            <g transform="translate(1 1)" stroke-width="2">
+              <circle stroke-opacity=".5" cx="18" cy="18" r="18" />
+              <path d="M36 18c0-9.94-8.06-18-18-18">
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 18 18"
+                  to="360 18 18"
+                  dur="1s"
+                  repeatCount="indefinite"
+                />
+              </path>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
+    <noscript>
+      <div style="text-align: center; padding: 20px">
+        <h1>JavaScript is required</h1>
+        <p>Please enable JavaScript to use YouTube Video Analytics.</p>
+      </div>
+    </noscript>
   </body>
 </html>
